@@ -40,7 +40,7 @@ class Telnyx extends superfecta_base{
 		//we need to use our own curl since get_url_contents doesn't support http headers
 		$url = sprintf("https://data.telnyx.com/cnam/v1/caller-information?tn=%s",$thenumber);
 		$crl = curl_init();
-		
+
 		$headers = array(
     'Content-Type: application/json"',
 	'Accept: application/json',
