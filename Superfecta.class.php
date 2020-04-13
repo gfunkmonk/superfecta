@@ -208,14 +208,14 @@ class Superfecta implements \BMO
                 $callerid = preg_replace("/[\";']/", "", $callerid);
                 //limit caller id to the first 60 char
                 $callerid = substr($callerid, 0, 60);
-                
+
                 // Display issues on phones and CDR with special characters
                 // convert CNAM to UTF-8 to fix
                 if (function_exists('mb_convert_encoding')) {
                     $this->out("Converting result to UTF-8");
                     $callerid = mb_convert_encoding($callerid, "UTF-8");
                 }
-                
+
                 //send off
                 $superfecta->send_results($callerid);
             }
