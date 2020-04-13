@@ -2,51 +2,105 @@
 	<rawname>superfecta</rawname>
 	<repo>extended</repo>
 	<name>CID Superfecta</name>
-	<version>14.0.27</version>
+	<version>15.0.2.23</version>
 	<type>setup</type>
 	<category>Admin</category>
 	<publisher>Sangoma Technologies Corporation</publisher>
 	<license>GPLv2+</license>
-	<licenselink>http://www.gnu.org/licenses/gpl-2.0.txt</licenselink>
+	<licenselink>httpS://www.gnu.org/licenses/gpl-2.0.txt</licenselink>
 	<description>
 		Provides simultaneous use of, and complete control over multiple caller id data sources.
 	</description>
 	<changelog>
-		*14.0.27* Fixing FREEPBX-20992 Adding code to fix Connectwise connectivity issue 
-		*14.0.26* FREEPBX-20879 Need to update tooltip for Send to email CID Superfecta. 
-		*14.0.25* Bugfix/FREEPBX-15699 
-		*14.0.24* FREEPBX-20557 XSS in Superfecta.class.php 
-		*14.0.23* bump 
-		*14.0.22* freepbx-17661 
-		*14.0.21* FREEPBX-20323 Update regexs for whocalledUK 
-		*14.0.20* FREEPBX-15770 fix name formatting for whocalled 
-		*14.0.19* FREEPBX-19037
-		*14.0.18* Fixing FREEPBX-19497 Removing cache files to avoid signature mismatch warning 
-		*14.0.17* Bugfix/FREEPBX-17185 
-		*14.0.16* Bugfix/FREEPBX-17727 
-		*14.0.15* FREEPBX-17387 store pre and post cnam in channel vars 
-		*14.0.14* FREEPBX-15699 add DID send to sources 
-		*14.0.13* FREEPBX-17332 fix send-to order bug 
-		*14.0.12* FREEPBX-14139 fix issues with cache and trunk provided 
-		*14.0.11* FREEPBX-15891 fix for connectwise bug 
-		*14.0.10* FREEPBX-17220 trivial fix 
-		*14.0.9* Bugfix/FREEPBX-13273 
-		*14.0.8* FREEPBX-17279 Add IFTT support 
-		*14.0.7* FREEPBX-17421 Set default values 
-		*14.0.6* FREEPBX-10782 validate configuration parameters. 
-		*14.0.5* fix pushbullet API for non-active devices 
-		*14.0.4* DasTelefonBuch fixes 
-		*14.0.3* source-TelefonABC_Austria.module online editiert mit Bitbucket 
-		*14.0.2* If the Caller ID is 'unknown', 'anonymous' or empty then skip the check 
-		*14.0.1* Forked from 13.0.4
+		*15.0.2.23* Fixing FREEPBX-20992 Adding code to fix Connectwise connectivity issue 
+		*15.0.2.22* FREEPBX-20879 Need to update tooltip for Send to email CID Superfecta. 
+		*15.0.2.21* Bugfix/FREEPBX-15699 
+		*15.0.2.20* FREEPBX-20557 XSS in Superfecta.class.php 
+		*15.0.2.19* FREEPBX-20563 Restoring legacy(FreePBX 13 ,14) Backup into FreePBX 15 system is disabling CallerID superfecta schemes. 
+		*15.0.2.18* Related to FREEPBX-20414: removed $jobid from runRestore() 
+		*15.0.2.17* bump 
+		*15.0.2.16* freepbx-17661 
+		*15.0.2.15* FREEPBX-20323 Update regexs for whocalledUK 
+		*15.0.2.14* FREEPBX-15770 fix name formatting for whocalled 
+		*15.0.2.13* Add legacy restore
+		*15.0.2.12* Fix backup and restore in 15 
+		*15.0.2.11* Fixing FREEPBX-19497 Removing cache files to avoid signature mismatch warning 
+		*15.0.2.10* Bugfix/FREEPBX-17185 
+		*15.0.2.9* Bugfix/FREEPBX-17727 
+		*15.0.2.8* FREEPBX-17387 store pre and post cnam in channel vars 
+		*15.0.2.7* FREEPBX-15699 add DID send to sources 
+		*15.0.2.6* FREEPBX-17332 fix send-to order bug 
+		*15.0.2.5* FREEPBX-15891 fix for connectwise bug 
+		*15.0.2.4* FREEPBX-17220 trivial fix 
+		*15.0.2.3* Bugfix/FREEPBX-13273 
+		*15.0.2.2* FREEPBX-17279 Add IFTT support 
+		*15.0.2* Packaging of ver 15.0.2
+		*15.0.1* Backup and Restore 15.0
 	</changelog>
 	<menuitems>
 		<superfecta needsenginedb="yes">CID Superfecta</superfecta>
 	</menuitems>
+	<database>
+		<table name="superfectaconfig">
+			<field name="source" type="string" length="150" primarykey="true"/>
+			<field name="field" type="string" length="150" primarykey="true"/>
+			<field name="value" type="text" notnull="false"/>
+		</table>
+		<table name="superfectacache">
+			<field name="number" type="bigint" unsigned="true" primarykey="true"/>
+			<field name="callerid" type="string" length="45"/>
+			<field name="dateentered" type="datetime"/>
+		</table>
+		<table name="superfecta_to_incoming">
+			<field name="superfecta_to_incoming_id" type="bigint" primarykey="true" autoincrement="true"/>
+			<field name="extension" type="string" length="50" notnull="false"/>
+			<field name="cidnum" type="string" length="50" notnull="false"/>
+			<field name="scheme" type="string" length="50"/>
+			<key name="extn" type="unique">
+				<column name="extension"/>
+				<column name="cidnum"/>
+			</key>
+		</table>
+		<table name="superfecta_mf_child">
+			<field name="superfecta_mf_child_id" type="bigint" primarykey="true" autoincrement="true"/>
+			<field name="superfecta_mf_id" type="bigint" notnull="false"/>
+			<field name="priority" type="integer" notnull="false"/>
+			<field name="source" type="string" length="128" notnull="false"/>
+			<field name="timestamp_start" type="float" notnull="false"/>
+			<field name="timestamp_cnam" type="float" notnull="false"/>
+			<field name="timestamp_end" type="float" notnull="false"/>
+			<field name="spam" type="integer" notnull="false"/>
+			<field name="spam_text" type="string" length="64" notnull="false"/>
+			<field name="cnam" type="string" length="128" notnull="false"/>
+			<field name="cached" type="boolean" notnull="false"/>
+			<field name="debug_result" type="text" notnull="false"/>
+			<field name="error_result" type="text" notnull="false"/>
+			<key name="start_time" type="index">
+				<column name="timestamp_start"/>
+			</key>
+			<key name="superfecta_mf_id" type="index">
+				<column name="superfecta_mf_id"/>
+			</key>
+		</table>
+		<table name="superfecta_mf">
+			<field name="superfecta_mf_id" type="bigint" primarykey="true" autoincrement="true"/>
+			<field name="timestamp_start" type="float" notnull="false"/>
+			<field name="timestamp_end" type="float" notnull="false"/>
+			<field name="scheme" type="string" length="64" notnull="false"/>
+			<field name="cidnum" type="string" length="50" notnull="false"/>
+			<field name="extension" type="string" length="50" notnull="false"/>
+			<field name="prefix" type="string" length="50" notnull="false"/>
+			<field name="debug" type="boolean" notnull="false"/>
+			<field name="winning_child_id" type="bigint" notnull="false"/>
+			<field name="spam_child_id" type="bigint" notnull="false"/>
+			<key name="start_time" type="index">
+				<column name="timestamp_start"/>
+			</key>
+		</table>
+	</database>
 	<info>https://github.com/POSSA/Caller-ID-Superfecta/wiki</info>
 	<depends>
 		<module>core ge 13.0.13</module>
-		<version>12.0.1</version>
 	</depends>
 	<hooks>
 		<framework class="Chown" namespace="FreePBX\Console\Command">
@@ -54,8 +108,6 @@
 		</framework>
 	</hooks>
 	<supported>
-		<version>14.0</version>
+		<version>15.0</version>
 	</supported>
-	<md5sum>a71ce14e885b43669a50395c975c0df9</md5sum>
-	<location>release/2.11/superfecta-2.11.5.tgz</location>
 </module>
